@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/plugins/bootstrap-3.3.7/css/bootstrap.min.css">
+</head>
+<body style="margin-top: 70px">
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-3">
+            <form action="" method="post" novalidate>
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form_obj.user.id_for_label }}">{{ form_obj.user.label }}</label>
+                    {{ form_obj.user }}
+                    <span>{{ form_obj.user.errors.0 }}</span>
+                </div>
+
+                <div class="form-group">
+                   <label for="{{ form_obj.password.id_for_label }}">{{ form_obj.password.label }}</label>
+                    {{ form_obj.password }}
+                    <span>{{ form_obj.password.errors.0 }}</span>
+                </div>
+                <span>{{ err_msg }}</span>
+                <button type="submit" class="btn btn-primary btn-block">登陆</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

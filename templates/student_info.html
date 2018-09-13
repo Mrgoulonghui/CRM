@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/plugins/bootstrap-3.3.7/css/bootstrap.min.css">
+</head>
+<body style="margin-top: 70px">
+<div class="container">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">查看 {{ student_obj.customer }} 的详细信息</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>班级名称</th>
+                            <th>班主任</th>
+                            <th>讲师</th>
+                            <th>查看成绩</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for class in student_obj.class_list.all %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ class }}</td>
+                                <td>{{ class.tutor }}</td>
+                                <td>
+                                    {% for teacher_obj in class.teachers.all %}
+                                        {{ teacher_obj }}
+                                    {% endfor %}
+                                </td>
+                                <td><a href="javascript:void (0)" class="show_score" cls_id="{{ class.pk }}">查看成绩柱状图</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="container" style="min-width:400px;height:400px"></div>
+</div>
+<script src="/static/plugins/jquery.js"></script>
+<script src="/static/plugins/highcharts_code/highcharts.js"></script>
+<script>
+    $(function () {
+        $(".show_score").click(function () {
+            var cls_id = $(this).attr("cls_id");
+            $.ajax({
+                url: "",
+                type: "get",
+                data: {
+                    cls_id: cls_id
+                },
+                success: function (data) {
+                    var chart = Highcharts.chart('container', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: '个人成绩柱状图'
+                        },
+                        xAxis: {
+                            type: 'category',
+                            labels: {
+                                rotation: -45  // 设置轴标签旋转角度
+                            }
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: '分数'
+                            }
+                        },
+                        legend: {
+                            enabled: false
+                        },
+                        tooltip: {
+                            pointFormat: '当天分数: <b>{point.y:.1f} 分</b>'
+                        },
+                        series: [{
+                            name: '总人口',
+                            data: data,
+                            dataLabels: {
+                                enabled: true,
+                                rotation: -90,
+                                color: '#FFFFFF',
+                                align: 'right',
+                                format: '{point.y:.1f}', // :.1f 为保留 1 位小数
+                                y: 10
+                            }
+                        }]
+                    });
+
+                }
+
+            });
+        })
+    })
+
+</script>
+</body>
+</html>

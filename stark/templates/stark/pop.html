@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // 子窗口和父窗口通信,子窗口可以调用父窗口的函数
+    window.opener.pop_back_func("{{ text }}", "{{ pk }}");
+    window.close()
+</script>
+</body>
+</html>

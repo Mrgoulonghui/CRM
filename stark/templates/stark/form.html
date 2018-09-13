@@ -1,0 +1,16 @@
+<form action="" method="post" novalidate >
+    {% csrf_token %}
+    {% for field in form_obj %}
+        <div class="form-group">
+            <label for="">{{ field.label }}</label>
+            {{ field }}
+            <span>{{ field.errors.0 }}</span>
+            {% if field.is_pop %}
+                <span class="pop_btn"><a href="javascript:void(0)" onclick="pop('{{ field.url }}', '{{ field.pop_back_id }}')">+</a></span>
+                <!-- 给这个加号绑定点击事件,执行pop函数,传入我们自定义的那两个参数 -->
+            {% endif %}
+        </div>
+    {% endfor %}
+    <button class="btn btn-success btn-block">提交</button>
+</form>
+

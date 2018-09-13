@@ -1,0 +1,85 @@
+{% extends "stark/base.html" %}
+
+{% block main_content %}
+    <div class="col-md-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">选择{{ model_name }}来修改</h3>
+                            <div class="add-btn">
+                                <a href="{{ add_url }}" class="btn btn-info">添加数据</a>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <!-- 如果用户定义了search_fields，才显示搜索框-->
+                            {% if show_list.config_obj.search_fields %}
+                                <div class="pull-right" id="my-search">
+                                    <form class="form-inline" method="get" action="">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" placeholder="Search"
+                                                       name="condition" value="{{ condition }}">
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning">
+                                            <i class="fa fa-search fa-fw" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                            <!-- 注意这里form表单的提交数据作用域，把包select标签和我们生成的checkbox包起来-->
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <div style="margin-bottom: 7px">
+                                    <select class="form-control" style="width: 20%;display: inline-block" name="action">
+                                        <option>--------------------</option>
+                                        <!--循环那个我们创建的列表中 是一个个字典的new_action生成一个个option标签-->
+                                        {% for func in show_list.get_new_action %}
+                                            <option value="{{ func.name }}">{{ func.text }}</option>
+                                        {% endfor %}
+
+                                    </select>
+                                    <button class="btn btn-info" type="submit">Go</button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped text-center">
+                                        <thead>
+                                        <tr>
+                                            {% for head in show_list.get_header %}
+                                                <th class="text-center">{{ head }}</th>
+                                            {% endfor %}
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for data in show_list.get_body %}
+                                            <tr>
+                                                {% for field in data %}
+                                                    <td>{{ field }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                            <div class="pull-right">
+                                {{ show_list.page_html|safe }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    <div class="col-md-2">
+                    {% for field, links in show_list.get_list_filter_links.items %}
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">By {{ field|upper }}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <p><a href="{{ list_url }}">All</a></p>
+                                {% for link in links %}
+                                    <p>{{ link|safe }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+{% endblock%}

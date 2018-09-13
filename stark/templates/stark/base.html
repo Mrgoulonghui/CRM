@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/plugins/bootstrap-3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/plugins/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/admin_demo.css">
+    <link rel="stylesheet" href="/static/plugins/bootstrap-sweetalert-master/dist/sweetalert.css">
+</head>
+<body style="padding-bottom: 70px">
+{% csrf_token %}
+<nav class="navbar  navbar-inverse">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">后台管理</a>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row" style="margin-bottom: 10px;">
+        <div class="col-md-8">
+            <div>
+                <a href="">首页></a>
+                <a href="">{{ app_name }}></a>
+                <span>{{ model_name }}</span>
+            </div>
+            <div class="error">
+                {{ err_msg }}
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="sidebar">
+                <ul class="nav">
+                    <!-- request是全局变量，都可以用 -->
+                    {% for permission_dict in request.session.permission_menu_list %}
+                        {% if permission_dict.url == request.path  %}
+                            <li class="current_permission"><a href="{{ permission_dict.url }}">{{ permission_dict.title }}</a></li>
+                        {% else %}
+                            <li><a href="{{ permission_dict.url }}">{{ permission_dict.title }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+        <div class="main_content">
+            {% block main_content %}
+
+            {% endblock main_content %}
+        </div>
+    </div>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/static/plugins/bootstrap-sweetalert-master/dist/sweetalert.min.js"></script>
+<script>
+    $(function () {
+        $(".del_btn").on("click", function () {
+            var _this = this;
+            swal({
+                    title: "你确定要删除吗？",
+                    text: "删除可就找不回来了哦！",
+                    type: "warning",
+                    showCancelButton: true,  // 是否显示取消按钮
+                    confirmButtonClass: "btn-danger",  // 确认按钮的样式类是什么
+                    confirmButtonText: "删除",         // 确认按钮的文本内容是啥
+                    cancelButtonText: "取消",          // 取消按钮的文本内容
+                    closeOnConfirm: false              // 点击确认按钮是否关闭
+                },
+                function () {  // 点击确认就执行的匿名函数
+                    var deleteId = $(_this).attr("del_id");
+                    $.ajax({
+                        url: "/stark/{{ app_name }}/{{ model_name }}/" + deleteId + "/delete/",
+                        type: "post",
+                        data: {
+                            "id": deleteId,
+                            "csrfmiddlewaretoken": $("[name='csrfmiddlewaretoken']").val()
+                        },
+                        success: function (res) {
+                            console.log(res);
+                            if (res.code === 0) {
+                                swal("删除成功!", "你可以准备跑路了！", "success");
+                                // 手动在页面上用js删掉那一行数据，或者跳转
+                                $(".confirm").click(function () {
+                                    // 点击ok之后跳转页面
+                                    location.href = res.msg
+                                })
+                            } else {
+                                swal("删除失败", "你可以再尝试一下！", "error")
+                            }
+                        }
+                    })
+                });
+        })
+    });
+</script>
+</body>
+</html>

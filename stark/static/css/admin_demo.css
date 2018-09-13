@@ -1,0 +1,43 @@
+.add-btn{
+    position: absolute;
+    right: 16px;
+    top: 3px;
+}
+#my-search{
+    position: absolute;
+    right: 16px;
+    top: 55px;
+}
+
+.error{
+    line-height: 40px;
+    background-color: #ffc;
+}
+
+.filter_select{
+    background-color: #337ab7;
+    color: white;
+}
+
+.pop_btn{
+    font-size: 28px;
+    position: absolute;
+    top: 40%;
+    right:-15px ;
+}
+.form-group{
+    position: relative;
+}
+.pop_btn a:hover{
+    text-decoration: none;
+}
+
+.current_permission{
+    background-color: #337ab7;
+}
+.nav>.current_permission>a:hover{
+    background-color: #337ab7;
+}
+.current_permission a{
+    color: white;
+}
