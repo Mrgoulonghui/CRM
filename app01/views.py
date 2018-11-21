@@ -13,7 +13,7 @@ def login(request):
         if form_obj.is_valid():
             username = form_obj.cleaned_data.get("user")
             pwd = form_obj.cleaned_data.get("password")
-            user = models.UserInfo.objects.filter(username=username, password=pwd).first()
+            user = models.User.objects.filter(username=username, password=pwd).first()
             if user:
                 request.session["user"] = username  # 登陆成功，设置session
                 # 获取这个人的所有权限，去重
